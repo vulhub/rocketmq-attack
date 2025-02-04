@@ -7,7 +7,7 @@ A command-line tool for testing RocketMQ vulnerabilities.
 - [x] Attack RocketMQ Broker (CVE-2023-33246)
 - [ ] Attack RocketMQ Nameserver (CVE-2023-37582)
 - [x] Easy-to-use command-line interface
-- [ ] Support for both short and long command options
+- [x] Support for both short and long command options
 
 ## Usage
 
@@ -36,7 +36,7 @@ Both attack modes support the following options:
 
 ## Building
 
-Requires JDK 8 or later and Gradle 7.0 or later.
+Requires JDK 8 or later.
 
 ```bash
 ./gradlew shadowJar
@@ -46,7 +46,7 @@ The built JAR file will be located at `build/libs/rocketmq-attack-1.0-SNAPSHOT.j
 
 ## Disclaimer
 
-This tool is for security research and testing purposes only. Do not use it against systems you don't own or don't have permission to test.
+**This tool is for security research and testing purposes only. Do not use it against systems you don't own or don't have permission to test.**
 
 ## References
 
