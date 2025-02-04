@@ -11,6 +11,8 @@ A command-line tool for testing RocketMQ vulnerabilities.
 
 ## Usage
 
+Download the latest built JAR file from [Releases](https://github.com/vulhub/rocketmq-attack/releases/tag/1.0).
+
 ### Attack Broker (CVE-2023-33246)
 
 ```bash
